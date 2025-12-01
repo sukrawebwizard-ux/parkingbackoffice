@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "buildCommand": "npm install",
+  "devCommand": "node server.js",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "framework": "nodejs",
+  "env": {
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "JWT_SECRET": "@jwt_secret",
+    "JWT_EXPIRY": "24h",
+    "NODE_ENV": "production",
+    "PORT": "3000"
+  }
+}
