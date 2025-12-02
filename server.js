@@ -24,10 +24,24 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://127.0.0.1:8080',
   'http://127.0.0.1:8081',
+  'https://sukrawebwizard-ux-parkingbackoffice.vercel.app',
+  'https://sukrawebwizard-ux.github.io',
 ];
 
 app.use(cors({ 
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl requests, etc)
+    if (!origin) return callback(null, true);
+    
+    // Allow any origin in production, only check whitelist in development
+    if (process.env.NODE_ENV === 'production') {
+      callback(null, true);
+    } else if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true 
 }));
 app.use(express.json({ limit: '10mb' }));
