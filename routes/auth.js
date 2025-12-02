@@ -11,11 +11,11 @@ module.exports = function(supabase) {
   // ============================================
   router.post('/signup', async (req, res) => {
     try {
-      const { email, password, name } = req.body;
+      const { email, password, full_name, phone_number } = req.body;
 
-      if (!email || !password || !name) {
+      if (!email || !password || !full_name) {
         return res.status(400).json({ 
-          error: 'Missing required fields: email, password, name' 
+          error: 'Missing required fields: email, password, full_name' 
         });
       }
 
@@ -40,7 +40,8 @@ module.exports = function(supabase) {
           id: uuidv4(),
           email,
           password_hash: hashedPassword,
-          full_name: name,
+          full_name,
+          phone_number: phone_number || null,
           created_at: new Date().toISOString()
         })
         .select()
@@ -63,7 +64,9 @@ module.exports = function(supabase) {
         user: {
           id: newUser.id,
           email: newUser.email,
-          name: newUser.full_name
+          full_name: newUser.full_name,
+          role: newUser.role || 'user',
+          is_active: newUser.is_active !== false
         }
       });
     } catch (error) {
@@ -115,7 +118,9 @@ module.exports = function(supabase) {
         user: {
           id: user.id,
           email: user.email,
-          name: user.full_name
+          full_name: user.full_name,
+          role: user.role || 'user',
+          is_active: user.is_active !== false
         }
       });
     } catch (error) {
@@ -124,5 +129,50 @@ module.exports = function(supabase) {
     }
   });
 
+  // ============================================
+  // POST /api/auth/verify - Verify token and get user info
+  // ============================================
+  router.post('/verify', async (req, res) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+
+      if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+      }
+
+      // Verify JWT token
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || 'your-secret-key'
+      );
+
+      // Get user from database
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', decoded.id)
+        .single();
+
+      if (error || !user) {
+        return res.status(401).json({ error: 'User not found' });
+      }
+
+      res.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          phone_number: user.phone_number,
+          role: user.role || 'user',
+          is_active: user.is_active !== false
+        }
+      });
+    } catch (error) {
+      console.error('Token verification error:', error);
+      res.status(401).json({ error: 'Invalid or expired token' });
+    }
+  });
+
   return router;
 };
+
