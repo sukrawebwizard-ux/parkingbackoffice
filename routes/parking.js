@@ -1,4 +1,5 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = function(supabase) {
   const router = express.Router();
@@ -68,6 +69,7 @@ module.exports = function(supabase) {
       const { data: newParking, error } = await supabase
         .from('parking_locations')
         .insert({
+          id: uuidv4(),
           name,
           latitude,
           longitude,
