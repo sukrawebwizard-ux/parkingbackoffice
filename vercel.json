@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install",
-  "outputDirectory": "backend",
   "builds": [
     { 
-      "src": "backend/server.js", 
-      "use": "@vercel/node"
+      "src": "backend/package.json", 
+      "use": "@vercel/node",
+      "config": {
+        "zeroConfig": true
+      }
     }
   ],
   "routes": [
