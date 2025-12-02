@@ -1,0 +1,13 @@
+{
+  "appId": "com.maltaparking.app",
+  "appName": "Malta Parking Finder",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
