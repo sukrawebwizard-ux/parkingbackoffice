@@ -57,7 +57,7 @@ module.exports = function(supabase) {
   // ============================================
   router.post('/', async (req, res) => {
     try {
-      const { name, latitude, longitude, capacity, available_spaces, address, status } = req.body;
+      const { name, latitude, longitude, capacity, address, status } = req.body;
 
       if (!name || latitude === undefined || longitude === undefined) {
         return res.status(400).json({ 
@@ -72,7 +72,6 @@ module.exports = function(supabase) {
           latitude,
           longitude,
           capacity: capacity || 0,
-          available_spaces: available_spaces || 0,
           address: address || '',
           status: status || 'available',
           created_at: new Date().toISOString()
@@ -99,14 +98,13 @@ module.exports = function(supabase) {
   // ============================================
   router.put('/:id', async (req, res) => {
     try {
-      const { name, latitude, longitude, capacity, available_spaces, address, status } = req.body;
+      const { name, latitude, longitude, capacity, address, status } = req.body;
 
       const updateData = {};
       if (name !== undefined) updateData.name = name;
       if (latitude !== undefined) updateData.latitude = latitude;
       if (longitude !== undefined) updateData.longitude = longitude;
       if (capacity !== undefined) updateData.capacity = capacity;
-      if (available_spaces !== undefined) updateData.available_spaces = available_spaces;
       if (address !== undefined) updateData.address = address;
       if (status !== undefined) updateData.status = status;
 
