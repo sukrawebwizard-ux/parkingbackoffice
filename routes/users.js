@@ -10,7 +10,7 @@ module.exports = function(supabase) {
     try {
       const { data: users, error } = await supabase
         .from('users')
-        .select('id, email, full_name, created_at');
+        .select('id, email, full_name, phone_number, created_at');
 
       if (error) {
         return res.status(500).json({ error: error.message });
@@ -34,7 +34,7 @@ module.exports = function(supabase) {
     try {
       const { data: user, error } = await supabase
         .from('users')
-        .select('id, email, full_name, created_at')
+        .select('id, email, full_name, phone_number, created_at')
         .eq('id', req.params.id)
         .single();
 
