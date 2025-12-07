@@ -58,7 +58,7 @@ module.exports = function(supabase) {
   // ============================================
   router.post('/', async (req, res) => {
     try {
-      const { name, latitude, longitude, capacity, address, status } = req.body;
+      const { name, latitude, longitude, capacity, address, status, category, side } = req.body;
 
       if (!name || latitude === undefined || longitude === undefined) {
         return res.status(400).json({ 
@@ -76,6 +76,8 @@ module.exports = function(supabase) {
           capacity: capacity || 0,
           address: address || '',
           status: status || 'available',
+          category: category || 'public',
+          side: side || 'right',
           created_at: new Date().toISOString()
         })
         .select()
@@ -100,7 +102,7 @@ module.exports = function(supabase) {
   // ============================================
   router.put('/:id', async (req, res) => {
     try {
-      const { name, latitude, longitude, capacity, address, status } = req.body;
+      const { name, latitude, longitude, capacity, address, status, category, side } = req.body;
 
       const updateData = {};
       if (name !== undefined) updateData.name = name;
@@ -109,6 +111,8 @@ module.exports = function(supabase) {
       if (capacity !== undefined) updateData.capacity = capacity;
       if (address !== undefined) updateData.address = address;
       if (status !== undefined) updateData.status = status;
+      if (category !== undefined) updateData.category = category;
+      if (side !== undefined) updateData.side = side;
 
       const { data: updatedParking, error } = await supabase
         .from('parking_locations')
